@@ -1,13 +1,15 @@
 # はじめてのAI学習（PWA）
 
-AI初心者向け学習コンテンツを配信するPWA。現在はフェーズ1（土台づくり）まで完了。
+AI初心者向け学習コンテンツを配信するPWA。現在はフェーズ2まで完了。
+
+公開URL: <https://ikuiku25-ui.github.io/ai-content-app/>
 
 ## ローカルで起動する
 
-このフォルダに移動してサーバーを起動する。
+このフォルダ（`ai-content-app/`）に移動してサーバーを起動する。
 
 ```bash
-cd "/Users/ikumihasegawa/My project/ai-content-app" && python3 -m http.server 8080
+python3 -m http.server 8080
 ```
 
 ブラウザで <http://localhost:8080> を開く。停止は `Ctrl + C`。
