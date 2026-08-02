@@ -9,7 +9,8 @@
       "Bash(curl -s -o /dev/null -w \"server_status:%{http_code}\\\\n\" --max-time 3 http://localhost:8080/)",
       "Bash(git init *)",
       "Bash(git add *)",
-      "Bash(git -c 'user.name=Ikumi Hasegawa' -c user.email=ikuiku25@gmail.com commit -q -m ' *)"
+      "Bash(git -c 'user.name=Ikumi Hasegawa' -c user.email=ikuiku25@gmail.com commit -q -m ' *)",
+      "mcp__claude-in-chrome__tabs_context_mcp"
     ]
   }
 }
