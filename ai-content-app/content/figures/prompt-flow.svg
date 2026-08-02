@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" role="img"
+     aria-label="入力した文章がAIに渡り、続きが予測されて回答が出るまでの流れ図">
+  <style>
+    text { font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; }
+    .title { font-size: 20px; font-weight: 700; }
+    .sub { font-size: 14px; }
+  </style>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#a9aff2" />
+    </marker>
+  </defs>
+
+  <rect width="720" height="260" rx="14" fill="#ffffff" />
+
+  <rect x="24" y="66" width="184" height="118" rx="18" fill="#eef0fe" stroke="#c7cbf7" stroke-width="2" />
+  <text class="title" x="116" y="116" fill="#4338ca" text-anchor="middle">入力</text>
+  <text class="sub" x="116" y="144" fill="#6b6fa8" text-anchor="middle">あなたが書く指示</text>
+  <text class="sub" x="116" y="164" fill="#6b6fa8" text-anchor="middle">（プロンプト）</text>
+
+  <line x1="216" y1="125" x2="262" y2="125" stroke="#a9aff2" stroke-width="3" marker-end="url(#arrow)" />
+
+  <rect x="268" y="66" width="184" height="118" rx="18" fill="#4f46e5" />
+  <text class="title" x="360" y="116" fill="#ffffff" text-anchor="middle">生成AI</text>
+  <text class="sub" x="360" y="144" fill="#dcdafb" text-anchor="middle">自然な続きを</text>
+  <text class="sub" x="360" y="164" fill="#dcdafb" text-anchor="middle">少しずつ予測する</text>
+
+  <line x1="460" y1="125" x2="506" y2="125" stroke="#a9aff2" stroke-width="3" marker-end="url(#arrow)" />
+
+  <rect x="512" y="66" width="184" height="118" rx="18" fill="#eef0fe" stroke="#c7cbf7" stroke-width="2" />
+  <text class="title" x="604" y="116" fill="#4338ca" text-anchor="middle">回答</text>
+  <text class="sub" x="604" y="144" fill="#6b6fa8" text-anchor="middle">生成された文章</text>
+
+  <text class="sub" x="360" y="222" fill="#8a8fb5" text-anchor="middle">
+    出発点は入力。だから指示の書き方で結果が大きく変わる
+  </text>
+</svg>

@@ -130,3 +130,130 @@ h1 {
 [hidden] {
   display: none !important;
 }
+
+/* ---- ボタン ---- */
+
+.actions {
+  margin: 28px 0 0;
+}
+
+.button,
+.install__button {
+  display: block;
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover,
+.install__button:hover {
+  background: var(--brand-dark);
+}
+
+/* ---- 記事ページ ---- */
+
+.reader-page {
+  display: block;
+  padding: 0;
+}
+
+.reader__bar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: calc(12px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-left)) 12px
+    max(16px, env(safe-area-inset-right));
+  border-bottom: 1px solid var(--border);
+  /* 半透明にすると本文がヘッダーに透けて読みづらいため、不透明にする */
+  background: var(--bg);
+}
+
+.reader__back {
+  color: var(--brand);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.reader {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px max(16px, env(safe-area-inset-left))
+    calc(64px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-right));
+}
+
+.reader__title {
+  margin: 0 0 8px;
+  font-size: 1.6rem;
+  line-height: 1.45;
+}
+
+.reader__meta {
+  margin: 0 0 32px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.reader__status {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.reader h2 {
+  margin: 44px 0 16px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+.reader p {
+  margin: 0 0 20px;
+}
+
+.reader ul {
+  margin: 0 0 20px;
+  padding-left: 1.4em;
+}
+
+.reader li {
+  margin-bottom: 8px;
+}
+
+.reader figure {
+  margin: 28px 0;
+}
+
+.reader figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.reader figcaption {
+  margin-top: 10px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.note {
+  margin: 32px 0 0;
+  padding: 16px 18px;
+  border-left: 4px solid var(--brand);
+  border-radius: 0 10px 10px 0;
+  background: color-mix(in srgb, var(--brand) 8%, transparent);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}

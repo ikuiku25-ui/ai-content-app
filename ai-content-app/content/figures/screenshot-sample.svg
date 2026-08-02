@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" role="img"
+     aria-label="チャット画面の例。自分の質問とAIの回答が並んでいる">
+  <style>
+    text { font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; font-size: 15px; }
+    .me { fill: #ffffff; }
+    .ai { fill: #3a3d55; }
+    .muted { fill: #9aa0b8; font-size: 13px; }
+  </style>
+
+  <rect width="640" height="440" rx="14" fill="#ffffff" stroke="#e4e4ee" stroke-width="2" />
+
+  <rect x="2" y="2" width="636" height="46" rx="12" fill="#f4f4f9" />
+  <circle cx="30" cy="25" r="6" fill="#e2e3ec" />
+  <circle cx="50" cy="25" r="6" fill="#e2e3ec" />
+  <circle cx="70" cy="25" r="6" fill="#e2e3ec" />
+  <text class="muted" x="320" y="30" text-anchor="middle">AIチャット</text>
+
+  <text class="muted" x="612" y="86" text-anchor="end">あなた</text>
+  <rect x="236" y="96" width="376" height="58" rx="16" fill="#4f46e5" />
+  <text class="me" x="592" y="122" text-anchor="end">取引先へのお詫びメールを、3行で、</text>
+  <text class="me" x="592" y="144" text-anchor="end">丁寧すぎない言葉で書いて</text>
+
+  <text class="muted" x="28" y="196">AI</text>
+  <rect x="28" y="206" width="440" height="140" rx="16" fill="#f4f4f9" />
+  <text class="ai" x="52" y="238">このたびは納品が遅れ、申し訳ありません。</text>
+  <text class="ai" x="52" y="264">原因は社内の確認漏れで、すでに対応済みです。</text>
+  <text class="ai" x="52" y="290">明日中にお届けしますので、よろしくお願いします。</text>
+  <text class="muted" x="52" y="322">3行でまとめました。もう少し硬い表現にもできます。</text>
+
+  <rect x="28" y="372" width="584" height="46" rx="23" fill="#ffffff" stroke="#e4e4ee" stroke-width="2" />
+  <text class="muted" x="54" y="401">メッセージを入力…</text>
+  <circle cx="578" cy="395" r="16" fill="#4f46e5" />
+  <path d="M 571 395 L 585 395 M 579 389 L 585 395 L 579 401" stroke="#ffffff" stroke-width="2"
+        fill="none" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
