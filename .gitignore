@@ -1,3 +1,6 @@
 .DS_Store
 node_modules/
 *.log
+
+# このMac固有のClaude Code設定。他の環境と衝突するため共有しない
+.claude/settings.local.json
