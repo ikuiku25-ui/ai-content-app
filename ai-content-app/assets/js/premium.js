@@ -70,6 +70,9 @@
    *
    * Content-Typeを text/plain にしているのは意図的。GASは事前確認の通信
    * （CORSプリフライト）に応答できず、application/json で送ると失敗するため。
+   *
+   * cache: 'no-store' も必須。GASはPOSTに対して使い捨ての転送先URLを返すため、
+   * ブラウザが応答をキャッシュすると、2回目以降に使用済みのURLへ飛んで404になる。
    */
   async function callBackend(payload) {
     const response = await fetch(window.AppConfig.GAS_ENDPOINT, {
@@ -77,6 +80,8 @@
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload),
       redirect: 'follow',
+      cache: 'no-store',
+      credentials: 'omit',
     });
 
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
