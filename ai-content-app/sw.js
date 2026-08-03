@@ -6,18 +6,12 @@
  * サブディレクトリに移すとアプリ全体をオフライン化できなくなる。
  */
 
-// アプリの外側（画面を出すのに必要なファイル）と、コンテンツ本体を分けておく。
-// 将来「決済完了後にコンテンツだけダウンロード／削除する」ときに、
-// アプリ本体のキャッシュを巻き込まずに済むため。
-//
-// バージョン番号も別々にしてある。共通の番号にすると、アプリを修正して
-// 番号を上げるたびに、購入済みのコンテンツまで一緒に消えてしまう。
+// キャッシュ名は画面側（premium.js）とも共有するため、定義を1か所にまとめてある。
 // 古い番号のキャッシュはactivate時に自動で削除される。
-const SHELL_VERSION = 'v2';
-const CONTENT_VERSION = 'v1';
+importScripts('assets/js/cache-names.js');
 
-const SHELL_CACHE = `ai-content-app-shell-${SHELL_VERSION}`;
-const CONTENT_CACHE = `ai-content-app-content-${CONTENT_VERSION}`;
+const SHELL_CACHE = self.CacheNames.SHELL;
+const CONTENT_CACHE = self.CacheNames.CONTENT;
 const CURRENT_CACHES = [SHELL_CACHE, CONTENT_CACHE];
 
 const OFFLINE_URL = './offline.html';
@@ -29,12 +23,17 @@ const SHELL_ASSETS = [
   './',
   './index.html',
   './content.html',
+  './premium.html',
   './offline.html',
   './manifest.json',
   './assets/css/style.css',
+  './assets/js/cache-names.js',
+  './assets/js/config.js',
   './assets/js/sw-register.js',
   './assets/js/app.js',
+  './assets/js/render-article.js',
   './assets/js/content.js',
+  './assets/js/premium.js',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
   './assets/icons/icon-maskable-512.png',

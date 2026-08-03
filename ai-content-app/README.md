@@ -47,11 +47,12 @@ HTTPS環境に公開したあと（フェーズ2以降）に行う。
 
 | キャッシュ名 | 中身 | いつ保存されるか |
 | --- | --- | --- |
-| `ai-content-app-shell-v2` | HTML・CSS・JS・アイコン | インストール時に一括 |
-| `ai-content-app-content-v1` | `content/` 以下（記事データ・図解） | 記事を開いた時 |
+| `ai-content-app-shell-v3` | HTML・CSS・JS・アイコン | インストール時に一括 |
+| `ai-content-app-content-v1` | `content/` 以下（記事データ・図解・購入した記事） | 記事を開いた時 |
 
 バージョン番号を別々にしているのは、アプリを修正するたびに購入済みコンテンツまで
-消えてしまうのを防ぐため。
+消えてしまうのを防ぐため。名前の定義は `assets/js/cache-names.js` の1か所にあり、
+`sw.js` と `premium.js` の両方がそこを読む。
 
 ## コンテンツの追加・編集
 
@@ -77,16 +78,45 @@ node tools/generate-icons.mjs
 | パス | 役割 |
 | --- | --- |
 | `index.html` | 仮トップページ（準備中） |
-| `content.html` | 記事表示ページ |
+| `content.html` | 無料サンプル記事のページ |
+| `premium.html` | 有料記事のページ。未解錠ならコード入力、解錠済みなら本文 |
 | `offline.html` | オフライン時に表示する代替画面 |
 | `manifest.json` | アプリ名・アイコン・テーマカラーなどPWAの設定 |
 | `sw.js` | Service Worker。ルート直下から動かさないこと |
+| `assets/js/cache-names.js` | キャッシュ名の定義（sw.jsと画面の両方が読む） |
+| `assets/js/config.js` | GASのURLなど環境ごとの設定 |
 | `assets/js/sw-register.js` | Service Workerの登録（全ページで読み込む） |
 | `assets/js/app.js` | トップページのインストール導線 |
-| `assets/js/content.js` | 記事の描画 |
+| `assets/js/render-article.js` | 記事の描画（無料・有料で共有） |
+| `assets/js/content.js` | 無料サンプルの読み込み |
+| `assets/js/premium.js` | 解錠とGASとの通信、有料記事の読み込み |
 | `assets/css/style.css` | スタイル（ダークモード対応） |
 | `assets/icons/` | PWAアイコン一式 |
-| `content/` | 記事データと図解 |
+| `content/` | 無料記事のデータと図解 |
+
+## 有料記事の仕組み
+
+購入者に渡すコードが鍵になる。ログインもアカウントもない。
+
+1. `premium.html` でコードを入力する
+2. GAS（`gas/main.gs`）がスプレッドシートを見て、コードの有効性と端末数を判定する
+3. 通れば記事本文が返り、`content-v1` キャッシュに保存される
+4. 以後はオフラインでも読める
+
+GASのURLは `assets/js/config.js` の `GAS_ENDPOINT` に設定する。**このURLは公開されるが
+問題ない。** URLは秘密ではなく、鍵はコードだからである。
+
+### GASを使わずに画面だけ確認する
+
+Googleの設定なしで解錠フローを試せる確認用サーバーがある。
+
+```bash
+node tools/mock-gas-server.mjs
+```
+
+有効なコード `AI-TEST-TEST-TEST`（3台まで）、無効化済み `AI-DEAD-DEAD-DEAD`、
+1台限定 `AI-ONE1-ONE1-ONE1` が使える。`config.js` の `GAS_ENDPOINT` が
+`http://localhost:8787/exec` を指していれば、そのまま繋がる。
 
 ## 公開
 

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>有料記事 — はじめてのAI学習</title>
+
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#4F46E5" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="AI学習" />
+    <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon-180.png" />
+    <link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32" type="image/png" />
+
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body class="reader-page">
+    <header class="reader__bar">
+      <a class="reader__back" href="index.html">← もどる</a>
+    </header>
+
+    <main class="reader">
+      <!-- 未解錠のとき -->
+      <section id="locked" hidden>
+        <h1 class="reader__title">購入者向けの記事</h1>
+        <p>
+          お渡ししたコードを入力すると、記事を読めるようになります。
+          一度読み込めば、次からはインターネットに接続していなくても開けます。
+        </p>
+
+        <form id="unlock-form" class="unlock" novalidate>
+          <label class="unlock__label" for="code-input">コード</label>
+          <input
+            id="code-input"
+            class="unlock__input"
+            type="text"
+            inputmode="latin"
+            autocomplete="off"
+            autocapitalize="characters"
+            spellcheck="false"
+            placeholder="AI-XXXX-XXXX-XXXX"
+          />
+          <p id="unlock-error" class="unlock__error" role="alert" hidden></p>
+          <button id="unlock-button" class="button" type="submit">解錠する</button>
+        </form>
+
+        <p class="unlock__hint">
+          大文字・小文字やハイフンの有無は問いません。うまくいかない場合は、
+          コードをそのままコピーして貼り付けてみてください。
+        </p>
+      </section>
+
+      <!-- 解錠済みのとき -->
+      <section id="article-wrap" hidden>
+        <p id="premium-notice" class="premium-notice" role="status" hidden></p>
+        <h1 id="article-title" class="reader__title"></h1>
+        <p id="article-meta" class="reader__meta"></p>
+        <div id="article"></div>
+      </section>
+    </main>
+
+    <script src="assets/js/cache-names.js"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/sw-register.js"></script>
+    <script src="assets/js/render-article.js"></script>
+    <script src="assets/js/premium.js"></script>
+  </body>
+</html>
