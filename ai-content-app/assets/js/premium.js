@@ -74,18 +74,32 @@
    * cache: 'no-store' も必須。GASはPOSTに対して使い捨ての転送先URLを返すため、
    * ブラウザが応答をキャッシュすると、2回目以降に使用済みのURLへ飛んで404になる。
    */
-  async function callBackend(payload) {
-    const response = await fetch(window.AppConfig.GAS_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload),
-      redirect: 'follow',
-      cache: 'no-store',
-      credentials: 'omit',
-    });
+  const RETRY_DELAYS_MS = [800, 3000];
 
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    return response.json();
+  async function callBackend(payload, attempt = 0) {
+    try {
+      const response = await fetch(window.AppConfig.GAS_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
+        redirect: 'follow',
+        cache: 'no-store',
+        credentials: 'omit',
+      });
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      // GASは混雑時に一時的な失敗を返すことがある。少し待って掛け直す。
+      //
+      // 掛け直しても二重登録にはならない。GAS側は同じ（コード, 端末ID）の
+      // 組をすでに登録済みとみなし、台数を増やさず通すため。
+      if (attempt < RETRY_DELAYS_MS.length) {
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAYS_MS[attempt]));
+        return callBackend(payload, attempt + 1);
+      }
+      throw error;
+    }
   }
 
   // ---- 保存と読み出し ---------------------------------------------------
