@@ -16,9 +16,7 @@ const CURRENT_CACHES = [SHELL_CACHE, CONTENT_CACHE];
 
 const OFFLINE_URL = './offline.html';
 
-// インストール時にまとめて保存するファイル
-// content/ 以下は含めない。フェーズ3では購入後に初めて取得するものであり、
-// フェーズ2でも同じく、記事を開いた時点で保存される。
+// インストール時にまとめて保存する、画面を出すためのファイル
 const SHELL_ASSETS = [
   './',
   './index.html',
@@ -41,11 +39,31 @@ const SHELL_ASSETS = [
   './assets/icons/favicon-32.png',
 ];
 
+// 無料サンプル記事も、インストール時にまとめて保存する。
+// これが無いと、サンプル記事を一度も開かないままオフラインにした端末では
+// 本文を取得できず「読み込めませんでした」になる。
+//
+// 有料コンテンツはここに含めない。購入前に配ってしまうことになるうえ、
+// そもそもリポジトリには置いていない（GASから取得する）。
+const CONTENT_ASSETS = [
+  './content/lesson-01.json',
+  './content/figures/ai-overview.svg',
+  './content/figures/prompt-flow.svg',
+  './content/figures/screenshot-sample.svg',
+];
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
     (async () => {
-      const cache = await caches.open(SHELL_CACHE);
-      await cache.addAll(SHELL_ASSETS);
+      const [shellCache, contentCache] = await Promise.all([
+        caches.open(SHELL_CACHE),
+        caches.open(CONTENT_CACHE),
+      ]);
+      // addAllは追加するだけなので、購入済みの記事は消えない
+      await Promise.all([
+        shellCache.addAll(SHELL_ASSETS),
+        contentCache.addAll(CONTENT_ASSETS),
+      ]);
       // 新しいService Workerを待機させず、すぐ有効にする
       await self.skipWaiting();
     })()
