@@ -30,6 +30,8 @@ const SHELL_ASSETS = [
   './assets/js/sw-register.js',
   './assets/js/app.js',
   './assets/js/render-article.js',
+  './assets/js/article-source.js',
+  './assets/js/article-list.js',
   './assets/js/content.js',
   './assets/js/premium.js',
   './assets/icons/icon-192.png',

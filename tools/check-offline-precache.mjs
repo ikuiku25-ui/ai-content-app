@@ -65,5 +65,32 @@ if (missing.length) {
   process.exit(1);
 }
 
+// 画面が読み込むCSSとJSも、事前保存されていないとオフラインで動かない。
+// ページにスクリプトを足して sw.js への追加を忘れる、という見落としを拾う。
+const htmlFiles = [...precached].filter((path) => path.endsWith('.html'));
+const missingAssets = [];
+
+for (const htmlFile of htmlFiles) {
+  const html = readFileSync(join(APP_DIR, htmlFile), 'utf8');
+  const refs = [
+    ...[...html.matchAll(/<script[^>]+src="([^"]+)"/g)].map((m) => m[1]),
+    ...[...html.matchAll(/<link[^>]+rel="stylesheet"[^>]+href="([^"]+)"/g)].map((m) => m[1]),
+  ];
+
+  for (const ref of refs) {
+    // 外部URLは対象外
+    if (/^https?:/.test(ref)) continue;
+    const path = ref.replace(/^\.\//, '');
+    if (!precached.has(path)) missingAssets.push(`${htmlFile} → ${path}`);
+  }
+}
+
+if (missingAssets.length) {
+  console.error('NG: 画面が読み込むファイルが事前保存されていません。sw.js の SHELL_ASSETS に不足:');
+  for (const item of missingAssets) console.error(`  - ${item}`);
+  process.exit(1);
+}
+
 console.log(`OK: 記事${articles.length}本に必要な${required.size}件はすべて事前保存の対象です`);
 for (const path of required) console.log(`  - ${path}`);
+console.log(`OK: ${htmlFiles.length}枚の画面が読み込むCSS/JSも、すべて事前保存の対象です`);
