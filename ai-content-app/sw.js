@@ -45,8 +45,11 @@ const SHELL_ASSETS = [
 //
 // 有料コンテンツはここに含めない。購入前に配ってしまうことになるうえ、
 // そもそもリポジトリには置いていない（GASから取得する）。
+// 記事を増やしたらここにも足すこと。
+// 漏れは node tools/check-offline-precache.mjs で検出できる。
 const CONTENT_ASSETS = [
-  './content/lesson-01.json',
+  './content/index.json',
+  './content/what-is-ai.json',
   './content/figures/ai-overview.svg',
   './content/figures/prompt-flow.svg',
   './content/figures/screenshot-sample.svg',

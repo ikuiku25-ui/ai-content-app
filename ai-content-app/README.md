@@ -66,14 +66,32 @@ node tools/check-offline-precache.mjs
 消えてしまうのを防ぐため。名前の定義は `assets/js/cache-names.js` の1か所にあり、
 `sw.js` と `premium.js` の両方がそこを読む。
 
-## コンテンツの追加・編集
+## 無料記事の追加・編集
 
-記事本文は `content/lesson-01.json` にある。`content.html` に直接書かず、JSONから
-読み込んで描画している。フェーズ3で取得先をGASに変えるとき、描画側を書き換えずに
-済ませるため。
+記事1本がJSONファイル1つ。それとは別に目次ファイル `content/index.json` がある。
+本文を `content.html` に直接書かず、JSONから読み込んで描画している。有料記事の
+取得先をGASに差し替えても、描画側を書き換えずに済ませるため。
+
+記事は `content.html?id=<記事ID>` で開く。**目次に載っているIDだけを受け付け**、
+それ以外はトップページへ戻す。`?id=` はURLに現れるため、任意のファイルを読ませない。
 
 ブロックの種類は `heading` / `paragraph` / `list` / `figure` / `note`。図解は
 `content/figures/` にSVGで置く。
+
+### 記事を1本増やす手順
+
+1. `content/<記事ID>.json` を作る（IDは `lesson-01` のような番号ではなく、
+   `what-is-ai` のように内容が分かる名前にする）
+2. `content/index.json` の `articles` に `{ id, title, summary }` を1行足す
+3. **`sw.js` の `CONTENT_ASSETS` に、記事のJSONと新しい図解を足す**
+4. 漏れがないか確認する
+
+```bash
+node tools/check-offline-precache.mjs
+```
+
+手順3を忘れると、その記事を一度も開いていない端末がオフラインで開けなくなる。
+手順4のコマンドが、目次に載っている全記事と図解を突き合わせて検出する。
 
 ## アイコンを差し替える
 
@@ -89,8 +107,8 @@ node tools/generate-icons.mjs
 
 | パス | 役割 |
 | --- | --- |
-| `index.html` | 仮トップページ（準備中） |
-| `content.html` | 無料サンプル記事のページ |
+| `index.html` | トップページ。記事一覧を兼ねる |
+| `content.html` | 無料記事のページ。`?id=` で記事を切り替える |
 | `premium.html` | 有料記事のページ。未解錠ならコード入力、解錠済みなら本文 |
 | `offline.html` | オフライン時に表示する代替画面 |
 | `manifest.json` | アプリ名・アイコン・テーマカラーなどPWAの設定 |
@@ -100,7 +118,9 @@ node tools/generate-icons.mjs
 | `assets/js/sw-register.js` | Service Workerの登録（全ページで読み込む） |
 | `assets/js/app.js` | トップページのインストール導線 |
 | `assets/js/render-article.js` | 記事の描画（無料・有料で共有） |
-| `assets/js/content.js` | 無料サンプルの読み込み |
+| `assets/js/article-source.js` | 目次の読み込みとIDの検証 |
+| `assets/js/article-list.js` | トップページの記事一覧 |
+| `assets/js/content.js` | 無料記事の読み込み |
 | `assets/js/premium.js` | 解錠とGASとの通信、有料記事の読み込み |
 | `assets/css/style.css` | スタイル（ダークモード対応） |
 | `assets/icons/` | PWAアイコン一式 |

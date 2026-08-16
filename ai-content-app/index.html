@@ -22,15 +22,19 @@
   <body>
     <main class="card">
       <img class="card__logo" src="assets/icons/icon-192.png" alt="" width="72" height="72" />
-      <p class="badge">準備中</p>
       <h1>はじめてのAI学習</h1>
       <p class="lead">
-        AI初心者のための学習コンテンツを準備しています。<br />
-        公開までもうしばらくお待ちください。
+        AIを使ったことがない方のための学習ノートです。<br />
+        一度開いた記事は、電波がなくても読めます。
       </p>
 
+      <section class="articles">
+        <h2 class="articles__heading">記事一覧</h2>
+        <p id="article-list-status" class="status">記事を読み込んでいます…</p>
+        <ul id="article-list" class="articles__list"></ul>
+      </section>
+
       <p class="actions">
-        <a class="button" href="content.html">サンプル記事を読む</a>
         <a class="button button--quiet" href="premium.html">購入者向けの記事を開く</a>
       </p>
 
@@ -52,6 +56,8 @@
     </main>
 
     <script src="assets/js/sw-register.js"></script>
+    <script src="assets/js/article-source.js"></script>
+    <script src="assets/js/article-list.js"></script>
     <script src="assets/js/app.js"></script>
   </body>
 </html>

@@ -248,6 +248,61 @@ h1 {
   text-align: center;
 }
 
+/* ---- 記事一覧 ---- */
+
+.articles {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  text-align: left;
+}
+
+.articles__heading {
+  margin: 0 0 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.articles__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.articles__list li + li {
+  margin-top: 10px;
+}
+
+.article-card {
+  display: block;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  text-decoration: none;
+  color: inherit;
+}
+
+.article-card:hover {
+  border-color: var(--brand);
+}
+
+.article-card__title {
+  display: block;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.article-card__summary {
+  display: block;
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
 /* ---- 解錠フォーム ---- */
 
 .button--quiet {
