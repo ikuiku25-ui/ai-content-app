@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 470" role="img"
+     aria-label="生成AIを、文章・画像・音声や音楽・動画の4つの分野に分けた地図">
+  <style>
+    text { font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; }
+    .kind { font-size: 19px; font-weight: 700; fill: #4338ca; }
+    .example { font-size: 14px; fill: #6b6fa8; }
+    .made { font-size: 13px; fill: #8a8fb5; }
+  </style>
+
+  <rect width="720" height="470" rx="14" fill="#ffffff" />
+
+  <rect x="270" y="24" width="180" height="64" rx="18" fill="#4f46e5" />
+  <text x="360" y="55" font-size="22" font-weight="700" fill="#ffffff" text-anchor="middle">生成AI</text>
+  <text x="360" y="76" font-size="13" fill="#dcdafb" text-anchor="middle">言葉で頼むと作ってくれる</text>
+
+  <path d="M360 88 V116 M90 116 H630 M90 116 V140 M270 116 V140 M450 116 V140 M630 116 V140"
+        stroke="#a9aff2" stroke-width="3" fill="none" stroke-linecap="round" />
+
+  <g>
+    <rect x="16" y="140" width="148" height="300" rx="16" fill="#eef0fe" stroke="#c7cbf7" stroke-width="2" />
+    <text class="kind" x="90" y="176" text-anchor="middle">文章</text>
+    <text class="made" x="90" y="200" text-anchor="middle">読む・書く</text>
+    <text class="example" x="90" y="238" text-anchor="middle">ChatGPT</text>
+    <text class="example" x="90" y="264" text-anchor="middle">Claude</text>
+    <text class="example" x="90" y="290" text-anchor="middle">Gemini</text>
+    <text class="example" x="90" y="316" text-anchor="middle">Copilot</text>
+  </g>
+
+  <g>
+    <rect x="196" y="140" width="148" height="300" rx="16" fill="#eef0fe" stroke="#c7cbf7" stroke-width="2" />
+    <text class="kind" x="270" y="176" text-anchor="middle">画像</text>
+    <text class="made" x="270" y="200" text-anchor="middle">絵・写真ふう</text>
+    <text class="example" x="270" y="238" text-anchor="middle">Midjourney</text>
+    <text class="example" x="270" y="264" text-anchor="middle">Adobe Firefly</text>
+    <text class="example" x="270" y="290" text-anchor="middle">Stable Diffusion</text>
+    <text class="example" x="270" y="316" text-anchor="middle">DALL·E</text>
+  </g>
+
+  <g>
+    <rect x="376" y="140" width="148" height="300" rx="16" fill="#eef0fe" stroke="#c7cbf7" stroke-width="2" />
+    <text class="kind" x="450" y="176" text-anchor="middle">音声・音楽</text>
+    <text class="made" x="450" y="200" text-anchor="middle">読み上げ・曲</text>
+    <text class="example" x="450" y="238" text-anchor="middle">ElevenLabs</text>
+    <text class="example" x="450" y="264" text-anchor="middle">Suno</text>
+    <text class="example" x="450" y="290" text-anchor="middle">Udio</text>
+  </g>
+
+  <g>
+    <rect x="556" y="140" width="148" height="300" rx="16" fill="#eef0fe" stroke="#c7cbf7" stroke-width="2" />
+    <text class="kind" x="630" y="176" text-anchor="middle">動画</text>
+    <text class="made" x="630" y="200" text-anchor="middle">短い映像</text>
+    <text class="example" x="630" y="238" text-anchor="middle">Sora</text>
+    <text class="example" x="630" y="264" text-anchor="middle">Veo</text>
+    <text class="example" x="630" y="290" text-anchor="middle">Runway</text>
+    <text class="example" x="630" y="316" text-anchor="middle">Kling</text>
+  </g>
+
+  <text class="made" x="360" y="415" text-anchor="middle">分野はちがっても、頼み方はどれも「言葉で伝える」だけ</text>
+</svg>
