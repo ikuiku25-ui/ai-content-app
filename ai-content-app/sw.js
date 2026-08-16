@@ -67,16 +67,34 @@ self.addEventListener('install', (event) => {
         caches.open(SHELL_CACHE),
         caches.open(CONTENT_CACHE),
       ]);
-      // addAllは追加するだけなので、購入済みの記事は消えない
+      // 保存するのは追加だけなので、購入済みの記事は消えない
       await Promise.all([
-        shellCache.addAll(SHELL_ASSETS),
-        contentCache.addAll(CONTENT_ASSETS),
+        precacheAll(shellCache, SHELL_ASSETS),
+        precacheAll(contentCache, CONTENT_ASSETS),
       ]);
       // 新しいService Workerを待機させず、すぐ有効にする
       await self.skipWaiting();
     })()
   );
 });
+
+/**
+ * 事前保存。ブラウザのキャッシュを迂回して取得する。
+ *
+ * cache.addAll はブラウザのキャッシュを経由するため、配信元が
+ * Cache-Control: max-age=600 を返す環境（GitHub Pagesなど）では、
+ * アプリを更新した直後に「古いJS」を保存してしまうことがある。
+ * その結果、新しいHTMLと古いJSが混ざり、画面が動かなくなる。
+ */
+async function precacheAll(cache, urls) {
+  await Promise.all(
+    urls.map(async (url) => {
+      const response = await fetch(url, { cache: 'reload' });
+      if (!response.ok) throw new Error(`事前保存に失敗: ${url} (HTTP ${response.status})`);
+      await cache.put(url, response);
+    })
+  );
+}
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(

@@ -5,8 +5,6 @@
 (() => {
   'use strict';
 
-  const { APP_ROOT, loadIndex, findArticle, articleUrl } = window.ArticleSource;
-
   const statusEl = document.getElementById('article-status');
   const targets = {
     titleEl: document.getElementById('article-title'),
@@ -14,8 +12,23 @@
     bodyEl: document.getElementById('article'),
   };
 
+  function showFailure(message) {
+    statusEl.hidden = false;
+    statusEl.textContent = message;
+    targets.titleEl.textContent = '記事を表示できません';
+  }
+
   (async () => {
     try {
+      // 依存するスクリプトの確認を、必ずtryの内側で行う。
+      // ここを外に出すと、読み込めていないときに例外が素通りし、
+      // 画面が「読み込んでいます」のまま無言で止まってしまう。
+      if (!window.ArticleSource || !window.ArticleRenderer) {
+        throw new Error('必要なスクリプトが読み込まれていません');
+      }
+
+      const { APP_ROOT, loadIndex, findArticle, articleUrl } = window.ArticleSource;
+
       const id = new URLSearchParams(location.search).get('id');
       const index = await loadIndex();
       const entry = findArticle(index, id);
@@ -32,8 +45,10 @@
       window.ArticleRenderer.render(await response.json(), targets, APP_ROOT);
       statusEl.hidden = true;
     } catch (error) {
-      statusEl.textContent =
-        'コンテンツを読み込めませんでした。通信状況を確認して、もう一度お試しください。';
+      showFailure(
+        'アプリのデータが古い可能性があります。インターネットに接続した状態で、' +
+          'アプリをいったん閉じてから開き直してください。'
+      );
       console.error('コンテンツの読み込みに失敗', error);
     }
   })();

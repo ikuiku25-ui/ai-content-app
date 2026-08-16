@@ -4,8 +4,6 @@
 (() => {
   'use strict';
 
-  const { loadIndex } = window.ArticleSource;
-
   const listEl = document.getElementById('article-list');
   const statusEl = document.getElementById('article-list-status');
 
@@ -34,7 +32,13 @@
 
   (async () => {
     try {
-      const index = await loadIndex();
+      // 依存の確認はtryの内側で。外に出すと、読み込めていないときに
+      // 例外が素通りして「読み込んでいます」のまま止まる。
+      if (!window.ArticleSource) {
+        throw new Error('必要なスクリプトが読み込まれていません');
+      }
+
+      const index = await window.ArticleSource.loadIndex();
       const articles = index.articles ?? [];
 
       if (!articles.length) {
@@ -47,7 +51,9 @@
       listEl.appendChild(fragment);
       statusEl.hidden = true;
     } catch (error) {
-      statusEl.textContent = '記事の一覧を読み込めませんでした。';
+      statusEl.hidden = false;
+      statusEl.textContent =
+        '記事の一覧を読み込めませんでした。インターネットに接続した状態で開き直してください。';
       console.error('目次の読み込みに失敗', error);
     }
   })();

@@ -15,7 +15,7 @@
 (() => {
   'use strict';
 
-  const SHELL_VERSION = 'v3';
+  const SHELL_VERSION = 'v4';
   const CONTENT_VERSION = 'v1';
 
   self.CacheNames = {
