@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img"
+     aria-label="文章をつくるAIの得意なことと苦手なことを2列で並べた対比表">
+  <style>
+    text { font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; }
+    .head { font-size: 20px; font-weight: 700; }
+    .item { font-size: 15px; }
+  </style>
+
+  <rect width="720" height="400" rx="14" fill="#ffffff" />
+
+  <g>
+    <rect x="20" y="24" width="330" height="352" rx="16" fill="#eef0fe" stroke="#c7cbf7" stroke-width="2" />
+    <text class="head" x="48" y="66" fill="#4338ca">得意なこと</text>
+
+    <circle cx="54" cy="112" r="4" fill="#4f46e5" />
+    <text class="item" x="70" y="118" fill="#4a4e70">長い文章を短くまとめる</text>
+
+    <circle cx="54" cy="160" r="4" fill="#4f46e5" />
+    <text class="item" x="70" y="166" fill="#4a4e70">メールや文章の下書きを作る</text>
+
+    <circle cx="54" cy="208" r="4" fill="#4f46e5" />
+    <text class="item" x="70" y="214" fill="#4a4e70">難しい言葉をやさしく言い換える</text>
+
+    <circle cx="54" cy="256" r="4" fill="#4f46e5" />
+    <text class="item" x="70" y="262" fill="#4a4e70">アイデアをたくさん出す</text>
+
+    <circle cx="54" cy="304" r="4" fill="#4f46e5" />
+    <text class="item" x="70" y="310" fill="#4a4e70">考えを整理する相手になる</text>
+  </g>
+
+  <g>
+    <rect x="370" y="24" width="330" height="352" rx="16" fill="#fff7ed" stroke="#fed7aa" stroke-width="2" />
+    <text class="head" x="398" y="66" fill="#b45309">苦手なこと</text>
+
+    <circle cx="404" cy="112" r="4" fill="#ea9a3c" />
+    <text class="item" x="420" y="118" fill="#6b5638">今日のニュースなど最新の話</text>
+
+    <circle cx="404" cy="160" r="4" fill="#ea9a3c" />
+    <text class="item" x="420" y="166" fill="#6b5638">正確な数字や細かい計算</text>
+
+    <circle cx="404" cy="208" r="4" fill="#ea9a3c" />
+    <text class="item" x="420" y="214" fill="#6b5638">あなたの会社や家庭の事情</text>
+
+    <circle cx="404" cy="256" r="4" fill="#ea9a3c" />
+    <text class="item" x="420" y="262" fill="#6b5638">出典がはっきりした事実の確認</text>
+
+    <circle cx="404" cy="304" r="4" fill="#ea9a3c" />
+    <text class="item" x="420" y="310" fill="#6b5638">まだ世に出ていない情報</text>
+  </g>
+</svg>

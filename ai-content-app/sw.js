@@ -53,11 +53,14 @@ const CONTENT_ASSETS = [
   './content/index.json',
   './content/what-is-ai.json',
   './content/services-map.json',
+  './content/text-ai.json',
   './content/figures/ai-overview.svg',
   './content/figures/prompt-flow.svg',
   './content/figures/screenshot-sample.svg',
   './content/figures/genai-map.svg',
   './content/figures/first-steps.svg',
+  './content/figures/text-ai-strengths.svg',
+  './content/figures/text-ai-trust.svg',
 ];
 
 self.addEventListener('install', (event) => {
