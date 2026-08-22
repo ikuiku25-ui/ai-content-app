@@ -1,5 +1,11 @@
 /**
- * トップページの記事一覧。
+ * トップページの「学びの地図」。
+ *
+ * 平らな一覧ではなく、幹（level 1）と枝（level 2）の関係が見える形で並べる。
+ * どこから読み始めて、どこで枝分かれするのかを、読む前に掴めるようにするため。
+ *
+ * まだ書いていない記事（status: planned）も地図には載せる。
+ * 先に何があるかが見えていること自体が、全体像の理解につながる。
  */
 (() => {
   'use strict';
@@ -7,26 +13,55 @@
   const listEl = document.getElementById('article-list');
   const statusEl = document.getElementById('article-list-status');
 
-  function buildItem(article) {
-    const item = document.createElement('li');
+  /** 記事1件分の中身（見出し・紹介文）を組み立てる */
+  function buildCardContent(article, stepNumber) {
+    const fragment = document.createDocumentFragment();
 
-    const link = document.createElement('a');
-    link.className = 'article-card';
-    link.href = `content.html?id=${encodeURIComponent(article.id)}`;
+    const heading = document.createElement('span');
+    heading.className = 'article-card__title';
 
-    const title = document.createElement('span');
-    title.className = 'article-card__title';
-    title.textContent = article.title;
-    link.appendChild(title);
+    // 幹には通し番号を振り、読む順番を示す
+    if (stepNumber) {
+      const step = document.createElement('span');
+      step.className = 'article-card__step';
+      step.textContent = stepNumber;
+      heading.appendChild(step);
+    }
+
+    heading.appendChild(document.createTextNode(article.title));
+    fragment.appendChild(heading);
 
     if (article.summary) {
       const summary = document.createElement('span');
       summary.className = 'article-card__summary';
       summary.textContent = article.summary;
-      link.appendChild(summary);
+      fragment.appendChild(summary);
     }
 
-    item.appendChild(link);
+    return fragment;
+  }
+
+  function buildItem(article, stepNumber) {
+    const item = document.createElement('li');
+    item.className = article.level === 2 ? 'articles__item articles__item--branch' : 'articles__item';
+
+    const planned = window.ArticleSource.isPlanned(article);
+
+    // 準備中はリンクにしない。押せる見た目にすると、押して失敗する
+    const card = document.createElement(planned ? 'div' : 'a');
+    card.className = planned ? 'article-card article-card--planned' : 'article-card';
+    if (!planned) card.href = `content.html?id=${encodeURIComponent(article.id)}`;
+
+    card.appendChild(buildCardContent(article, stepNumber));
+
+    if (planned) {
+      const badge = document.createElement('span');
+      badge.className = 'article-card__badge';
+      badge.textContent = '準備中';
+      card.appendChild(badge);
+    }
+
+    item.appendChild(card);
     return item;
   }
 
@@ -47,7 +82,12 @@
       }
 
       const fragment = document.createDocumentFragment();
-      for (const article of articles) fragment.appendChild(buildItem(article));
+      let step = 0;
+      for (const article of articles) {
+        const isTrunk = article.level !== 2;
+        if (isTrunk) step += 1;
+        fragment.appendChild(buildItem(article, isTrunk ? step : null));
+      }
       listEl.appendChild(fragment);
       statusEl.hidden = true;
     } catch (error) {

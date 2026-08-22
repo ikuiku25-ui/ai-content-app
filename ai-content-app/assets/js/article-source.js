@@ -18,15 +18,24 @@ window.ArticleSource = (() => {
     return response.json();
   }
 
+  /** これから書く予定の記事か。本文ファイルはまだ無い。 */
+  function isPlanned(article) {
+    return article.status === 'planned';
+  }
+
   /**
-   * 目次に載っているIDだけを受け付ける。
+   * 目次に載っていて、かつ本文がある記事だけを受け付ける。
    *
    * ?id= はURLに現れるので誰でも書き換えられる。目次と突き合わせずに
    * content/<id>.json を組み立てると、"../" を含むIDで意図しないファイルを
    * 読ませる余地ができる。取得先は必ず目次にある記事から決める。
+   *
+   * 準備中の記事も弾く。地図には載せるが本文はまだ無いため、
+   * 開こうとしても読み込みに失敗するだけになる。
    */
   function findArticle(index, id) {
-    return (index.articles ?? []).find((article) => article.id === id) ?? null;
+    const article = (index.articles ?? []).find((entry) => entry.id === id);
+    return article && !isPlanned(article) ? article : null;
   }
 
   /** 記事本体のURL。IDは findArticle を通ったものだけを渡すこと。 */
@@ -34,5 +43,5 @@ window.ArticleSource = (() => {
     return new URL(`content/${id}.json`, APP_ROOT);
   }
 
-  return { APP_ROOT, loadIndex, findArticle, articleUrl };
+  return { APP_ROOT, loadIndex, findArticle, articleUrl, isPlanned };
 })();

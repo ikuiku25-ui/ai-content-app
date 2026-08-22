@@ -258,11 +258,18 @@ h1 {
 }
 
 .articles__heading {
-  margin: 0 0 14px;
+  margin: 0 0 8px;
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--text-muted);
+}
+
+.articles__lead {
+  margin: 0 0 18px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.7;
 }
 
 .articles__list {
@@ -271,8 +278,40 @@ h1 {
   list-style: none;
 }
 
-.articles__list li + li {
+.articles__item + .articles__item {
   margin-top: 10px;
+}
+
+/* 枝は字下げし、縦線でつないで親子関係を見せる */
+.articles__item--branch {
+  position: relative;
+  padding-left: 26px;
+}
+
+.articles__item--branch::before {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: -10px;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+/* 最後の枝は、線を横棒の高さで止める */
+.articles__item--branch:last-child::before {
+  bottom: auto;
+  height: 44px;
+}
+
+.articles__item--branch::after {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: 32px;
+  width: 14px;
+  height: 2px;
+  background: var(--border);
 }
 
 .article-card {
@@ -287,6 +326,37 @@ h1 {
 
 .article-card:hover {
   border-color: var(--brand);
+}
+
+/* 準備中は押せない。見た目でもそれと分かるようにする */
+.article-card--planned {
+  border-style: dashed;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.article-card__badge {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text-muted) 14%, transparent);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.article-card__step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  font-size: 0.8rem;
+  vertical-align: 1px;
 }
 
 .article-card__title {

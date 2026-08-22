@@ -39,7 +39,15 @@ if (!articles.length) {
   process.exit(1);
 }
 
+let plannedCount = 0;
+
 for (const entry of articles) {
+  // 準備中の記事は本文ファイルをまだ持たない。地図に載せるだけなので対象外。
+  if (entry.status === 'planned') {
+    plannedCount += 1;
+    continue;
+  }
+
   const articlePath = `content/${entry.id}.json`;
   required.add(articlePath);
 
@@ -91,6 +99,9 @@ if (missingAssets.length) {
   process.exit(1);
 }
 
-console.log(`OK: 記事${articles.length}本に必要な${required.size}件はすべて事前保存の対象です`);
+const publishedCount = articles.length - plannedCount;
+const plannedNote = plannedCount ? `（ほかに準備中が${plannedCount}本）` : '';
+
+console.log(`OK: 記事${publishedCount}本に必要な${required.size}件はすべて事前保存の対象です${plannedNote}`);
 for (const path of required) console.log(`  - ${path}`);
 console.log(`OK: ${htmlFiles.length}枚の画面が読み込むCSS/JSも、すべて事前保存の対象です`);
