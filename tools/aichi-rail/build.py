@@ -70,6 +70,27 @@ def as_lines(geom):
     return [part for sub in getattr(geom, "geoms", []) for part in as_lines(sub)]
 
 
+def drop_spurs(lines_out, stations_out, rule):
+    """
+    指定した路線から、駅のない短い区間を除く（車両基地への引込線など）。
+    除いた区間は標準出力に書き出して確認できるようにする。
+    """
+    for line in lines_out:
+        if line["line"] not in rule["lines"]:
+            continue
+        own = [Point(s["x"], s["y"]) for s in stations_out if s["lineId"] == line["id"]]
+        kept = []
+        for part in line["parts"]:
+            geom = LineString(part)
+            has_station = any(geom.distance(p) <= rule["station_distance_m"] for p in own)
+            if geom.length <= rule["max_length_m"] and not has_station:
+                print(f"除外: {line['line']} の駅のない区間 {geom.length:.0f}m（端点 {part[0]} → {part[-1]}）")
+                continue
+            kept.append(part)
+        line["parts"] = kept
+        line["length_km"] = round(sum(LineString(p).length for p in kept) / 1000, 1)
+
+
 def polygon_rings(geom, simplify_m, min_area_m2):
     rings = []
     polys = [geom] if geom.geom_type == "Polygon" else list(geom.geoms)
@@ -186,6 +207,8 @@ def main():
             if i:
                 s["id"] = f"{sid}#{i + 1}"
             stations_out.append(s)
+
+    drop_spurs(lines_out, stations_out, n02["drop_spurs"])
 
     # --- 境界
     min_area = cfg["min_island_km2"] * 1e6

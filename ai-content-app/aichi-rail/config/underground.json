@@ -1,0 +1,13 @@
+{
+  "_comment": [
+    "地下鉄以外で、地下を走る区間。stations に書いた駅を depth の深さに置き、",
+    "となりの地上の駅との間は坂（傾斜）でつなぐ。line は data/lines.json の路線名、company は事業者キー。"
+  ],
+  "sections": [
+    { "company": "meitetsu", "line": "名古屋本線", "stations": ["名鉄名古屋"], "depth": -600 },
+    { "company": "kintetsu", "line": "名古屋線", "stations": ["近鉄名古屋"], "depth": -600 },
+    { "company": "meitetsu", "line": "瀬戸線", "stations": ["栄町", "東大手"], "depth": -600 },
+    { "company": "meitetsu", "line": "小牧線", "stations": ["上飯田", "味鋺"], "depth": -600 },
+    { "company": "meitetsu", "line": "豊田線", "stations": ["赤池"], "depth": -600 }
+  ]
+}
