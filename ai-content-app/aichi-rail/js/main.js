@@ -44,6 +44,8 @@ controls.dampingFactor = 0.12;
 controls.screenSpacePanning = false; // 移動は地面に沿って
 controls.minDistance = 600;
 controls.maxDistance = 260000;
+// タッチ操作は地図アプリと同じにする：1本指で移動、2本指でつまんで拡大・縮小、2本指を動かして回転・傾き
+controls.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_ROTATE };
 
 // 深さ強調スライダーの倍率は、この親グループの scale.y で掛ける（地面と境界線は含めない）
 const world = new THREE.Group();
