@@ -18,6 +18,7 @@ import argparse
 import datetime
 import io
 import json
+import re
 import sys
 import urllib.error
 import urllib.request
@@ -58,7 +59,9 @@ def extract_geojson(blob, dest):
 
 def from_zip(path, dest):
     blob = Path(path).read_bytes()
-    return f"file:{Path(path).name}", extract_geojson(blob, dest)
+    # アップロード時に付く先頭の識別子（例：72ccd15e-）は外し、公式のファイル名で記録する
+    name = re.sub(r"^[0-9a-f]{8}-", "", Path(path).name)
+    return f"file:{name}", extract_geojson(blob, dest)
 
 
 def fetch_n02(year2):

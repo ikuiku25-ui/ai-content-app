@@ -1,0 +1,17 @@
+{
+  "origin": {
+    "lon": 136.8815,
+    "lat": 35.1709,
+    "_comment": "名古屋駅付近を原点にしたメートル座標で出力する"
+  },
+  "sources": {
+    "n02": "file:N02-25_GML.zip",
+    "n03": "file:N03-20260101_23_GML.zip"
+  },
+  "fetched_at": "2026-09-28T08:46:12",
+  "counts": {
+    "lines": 30,
+    "stations": 452,
+    "stations_outside_dropped": 689
+  }
+}
