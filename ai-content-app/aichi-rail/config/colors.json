@@ -1,0 +1,24 @@
+{
+  "_comment": [
+    "路線色。lines に書いた路線はその色、書いていない路線は事業者の基本色を使う。",
+    "地上線は事業者の基本色のまま、路線ごとに明るさを ±lineLightnessRange の範囲でずらして見分けやすくする（0 で無効）。",
+    "キーは data/lines.json の line（路線名）。"
+  ],
+  "companies": {
+    "subway":   { "label": "名古屋市営地下鉄", "color": "#7F4098" },
+    "jr":       { "label": "JR東海",           "color": "#F77321" },
+    "meitetsu": { "label": "名鉄",             "color": "#E4002B" },
+    "kintetsu": { "label": "近鉄",             "color": "#9E1B32" }
+  },
+  "lineLightnessRange": 0.13,
+  "lines": {
+    "東山線":   "#F4A700",
+    "名城線":   "#7F4098",
+    "名港線":   "#9C7EC3",
+    "鶴舞線":   "#009BD1",
+    "桜通線":   "#E4003A",
+    "上飯田線": "#E85298",
+    "東海道新幹線": "#0072BC"
+  },
+  "boundary": { "prefecture": "#8a94a6", "nagoya": "#b8c0cc" }
+}
