@@ -1,7 +1,7 @@
 /**
  * 駅名ラベル。HTMLの文字を3D上の駅の位置に重ねて表示する。
  * - 主要駅は常に表示、それ以外はカメラが近いときだけ表示する
- * - 乗換グループは1つのラベルにまとめる（いちばん高い駅の上に出す）
+ * - 乗換グループは1つのラベルにまとめる（表示中の駅のうち、いちばん高い駅の位置に出す）
  * - 画面上で重なるラベルは、主要駅を優先して間引く
  */
 import * as THREE from 'three';
@@ -10,7 +10,7 @@ const NEAR_M = 9000;     // カメラからこの距離以内の駅は、主要�
 const MAX_LABELS = 140;  // 一度に出すラベルの上限（スマホの負荷対策）
 
 export function createLabels(container, items) {
-  // items: [{ text, x, y, h, major, under }]
+  // items: [{ text, major, under, points: [{ x, y, h, company }] }]
   const els = items.map((it) => {
     const el = document.createElement('div');
     el.className = `label${it.major ? ' major' : ''}${it.under ? ' under' : ''}`;
@@ -22,22 +22,25 @@ export function createLabels(container, items) {
   const order = items.map((_, i) => i).sort((a, b) => items[b].major - items[a].major);
   const v = new THREE.Vector3();
   const size = new Map(); // 文字の大きさは一度だけ測る
+  const shownNow = items.map(() => false);
 
-  /** world: 高さの倍率がかかった親グループ。filter: 表示してよい項目か */
-  function update(camera, world, width, height, filter = () => true) {
+  /** world: 高さの倍率がかかった親グループ。isShown: その駅（事業者）が表示中か */
+  function update(camera, world, width, height, isShown = () => true) {
     const placed = [];
     let shown = 0;
     for (const i of order) {
       const it = items[i], el = els[i];
       let visible = false;
-      if (shown < MAX_LABELS && filter(it)) {
-        v.set(it.x, it.h, -it.y).applyMatrix4(world.matrixWorld);
+      const anchor = shown < MAX_LABELS && topPoint(it.points.filter(isShown));
+      if (anchor) {
+        v.set(anchor.x, anchor.h, -anchor.y).applyMatrix4(world.matrixWorld);
         const dist = v.distanceTo(camera.position);
         if (it.major || dist < NEAR_M) {
           v.project(camera);
           if (v.z < 1 && Math.abs(v.x) < 1.1 && Math.abs(v.y) < 1.1) {
             if (!size.has(i)) {
               el.style.display = '';
+              shownNow[i] = true; // 測るために一度表示した。不要なら下で消える
               size.set(i, [el.offsetWidth, el.offsetHeight]);
             }
             const [w, h] = size.get(i);
@@ -53,8 +56,14 @@ export function createLabels(container, items) {
           }
         }
       }
-      el.style.display = visible ? '' : 'none';
+      // 変わったときだけ書き換える（毎フレーム全ラベルのスタイルを触るとスマホで重くなる）
+      if (shownNow[i] !== visible) {
+        shownNow[i] = visible;
+        el.style.display = visible ? '' : 'none';
+      }
     }
   }
   return { update };
 }
+
+const topPoint = (points) => points.reduce((a, b) => (!a || b.h > a.h ? b : a), null);

@@ -3,31 +3,80 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#eef1f5">
 <title>愛知の鉄道3D路線図</title>
 <meta name="description" content="名古屋市営地下鉄とJR東海・名鉄・近鉄の愛知県内の全路線・全駅を、実際の地理座標にもとづく3Dで表示します。">
 <style>
-  :root { --bg: #eef1f5; --ink: #1d2433; --muted: #5b6475; --panel: rgba(255,255,255,.92); --line: #ccd2dc; }
+  :root { --bg: #eef1f5; --ink: #1d2433; --muted: #5b6475; --panel: rgba(255,255,255,.94); --line: #ccd2dc;
+    --under: #5b3f8c; --elevated: #0b6aa8; --ground: #3d6b2f; }
   html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); color: var(--ink);
     font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
-    -webkit-text-size-adjust: 100%; }
+    -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
   #stage { position: fixed; inset: 0; touch-action: none; }
   #stage canvas { display: block; width: 100%; height: 100%; }
   #labels { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
   .label { position: absolute; left: 0; top: 0; white-space: nowrap; font-size: 11px; line-height: 1;
     padding: 2px 3px; color: var(--ink); text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 2px #fff;
-    will-change: transform; }
+    will-change: transform; -webkit-user-select: none; user-select: none; }
   .label.major { font-size: 12.5px; font-weight: 600; }
   .label.under { color: #3b2a55; }
-  .panel { position: fixed; background: var(--panel); border-radius: 10px; box-shadow: 0 1px 6px rgba(0,0,0,.14);
-    font-size: 12px; }
+  .panel { position: fixed; background: var(--panel); border-radius: 12px; box-shadow: 0 1px 8px rgba(0,0,0,.16);
+    font-size: 13px; -webkit-user-select: none; user-select: none; }
+  button { font: inherit; color: var(--ink); cursor: pointer; }
+
+  /* 視点プリセット */
   #views { top: calc(10px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); padding: 5px;
     display: flex; gap: 5px; }
-  #views button { font: inherit; font-size: 13px; padding: 7px 10px; border: 1px solid var(--line); background: #fff;
-    border-radius: 7px; color: var(--ink); white-space: nowrap; }
+  #views button { padding: 8px 11px; border: 1px solid var(--line); background: #fff; border-radius: 8px; white-space: nowrap; }
   #views button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
-  #attr { bottom: calc(6px + env(safe-area-inset-bottom)); right: 6px; padding: 3px 8px; font-size: 10px; color: var(--muted);
-    max-width: calc(100% - 24px); }
-  #err { position: fixed; inset: 40% 16px auto; text-align: center; color: #b00020; }
+
+  /* 表示設定 */
+  #settings { left: calc(10px + env(safe-area-inset-left)); bottom: calc(34px + env(safe-area-inset-bottom));
+    width: 230px; max-width: calc(100vw - 20px); }
+  #settings-toggle { width: 100%; text-align: left; background: none; border: 0; padding: 10px 12px; font-weight: 600;
+    display: flex; justify-content: space-between; align-items: center; min-height: 44px; }
+  #settings-toggle::after { content: "▲"; font-size: 10px; color: var(--muted); }
+  #settings.open #settings-toggle::after { content: "▼"; }
+  #settings .body { display: none; padding: 0 12px 12px; }
+  #settings.open .body { display: block; }
+  .company { display: flex; align-items: center; gap: 8px; min-height: 36px; }
+  .company input { width: 20px; height: 20px; margin: 0; accent-color: var(--ink); }
+  .company .sw { display: inline-flex; gap: 2px; min-width: 28px; }
+  .company .sw i { width: 6px; height: 14px; border-radius: 2px; display: block; }
+  .company .sw i:only-child { width: 22px; }
+  .depth { margin-top: 10px; }
+  .depth .row { display: flex; justify-content: space-between; margin-bottom: 2px; }
+  .depth input { width: 100%; margin: 6px 0 0; }
+  .hint { color: var(--muted); font-size: 11px; margin-top: 8px; line-height: 1.5; }
+
+  /* 駅の情報 */
+  #info { right: calc(10px + env(safe-area-inset-right)); bottom: calc(34px + env(safe-area-inset-bottom));
+    width: 320px; max-width: calc(100vw - 20px); padding: 12px 14px 12px; max-height: 50vh; overflow: auto; }
+  #info[hidden] { display: none; }
+  #info h2 { margin: 0; font-size: 18px; padding-right: 36px; }
+  #info-summary { color: var(--muted); font-size: 12px; margin: 2px 0 8px; }
+  #info-close { position: absolute; top: 6px; right: 6px; width: 40px; height: 40px; border: 0; background: none;
+    font-size: 20px; color: var(--muted); }
+  #info ul { list-style: none; margin: 0; padding: 0; }
+  #info li { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-top: 1px solid #eef0f3; }
+  #info li i { width: 6px; height: 18px; border-radius: 2px; flex: none; }
+  #info .ln { flex: 1; }
+  #info .lv { font-size: 11px; padding: 2px 6px; border-radius: 4px; color: #fff; flex: none; }
+  .lv-地下 { background: var(--under); } .lv-地上 { background: var(--ground); } .lv-高架 { background: var(--elevated); }
+
+  /* 出典は省略せず全文を出す（狭い画面では折り返す） */
+  #attr { bottom: calc(6px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); padding: 3px 8px;
+    font-size: 10px; line-height: 1.35; color: var(--muted); width: max-content; max-width: calc(100vw - 20px);
+    text-align: center; border-radius: 6px; box-sizing: border-box; }
+  #loading, #err { position: fixed; inset: 45% 16px auto; text-align: center; color: var(--muted); }
+  #err { color: #b00020; }
+
+  /* スマホ：駅の情報は画面下いっぱいに出し、設定パネルの上に重ねる */
+  @media (max-width: 700px) {
+    #views button { padding: 8px 9px; font-size: 12.5px; }
+    #settings { width: auto; right: auto; bottom: calc(44px + env(safe-area-inset-bottom)); }
+    #info { left: 10px; right: 10px; width: auto; z-index: 2; bottom: calc(44px + env(safe-area-inset-bottom)); }
+  }
 </style>
 <script type="importmap">
 { "imports": {
@@ -39,11 +88,33 @@
 <body>
 <div id="stage"></div>
 <div id="labels"></div>
-<div id="views" class="panel">
+<div id="loading">読み込み中…</div>
+
+<nav id="views" class="panel" aria-label="視点">
   <button data-view="nagoya">名古屋中心</button>
   <button data-view="aichi">愛知全体</button>
   <button data-view="underground">地下から見る</button>
-</div>
+</nav>
+
+<section id="settings" class="panel" aria-label="表示設定">
+  <button id="settings-toggle" aria-expanded="false" aria-controls="settings-body">表示設定</button>
+  <div class="body" id="settings-body">
+    <div id="companies"></div>
+    <div class="depth">
+      <div class="row"><label for="depth">深さの強調</label><output id="depth-value">×1.0</output></div>
+      <input id="depth" type="range" min="0.3" max="4" step="0.1" value="1">
+    </div>
+    <p class="hint">1本指で回転、2本指で移動・拡大。駅をタップすると乗換の情報が出ます。</p>
+  </div>
+</section>
+
+<section id="info" class="panel" hidden aria-live="polite">
+  <h2 id="info-title"></h2>
+  <div id="info-summary"></div>
+  <button id="info-close" aria-label="閉じる">×</button>
+  <ul id="info-rows"></ul>
+</section>
+
 <div id="attr" class="panel"></div>
 <div id="err"></div>
 <script type="module" src="js/main.js"></script>
