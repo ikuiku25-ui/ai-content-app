@@ -1,0 +1,27 @@
+{
+  "_comment": "属性名・値は inspect_raw.py の出力（実データ）を見て確定する。null のままだと build.py は止まる。",
+  "n02": {
+    "section_file": null,
+    "station_file": null,
+    "operator_field": null,
+    "line_field": null,
+    "station_name_field": null,
+    "station_group_field": null,
+    "operators": {
+      "subway": null,
+      "jr": null,
+      "meitetsu": null,
+      "kintetsu": null
+    },
+    "shinkansen_lines": null
+  },
+  "n03": {
+    "file": null,
+    "city_field": null,
+    "nagoya_value": null
+  },
+  "origin": { "lon": 136.8815, "lat": 35.1709, "_comment": "名古屋駅付近を原点にしたメートル座標で出力する" },
+  "simplify_m": { "line": 5, "prefecture": 40, "nagoya": 25 },
+  "min_island_km2": 0.05,
+  "station_clip_buffer_m": 30
+}

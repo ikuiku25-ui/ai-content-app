@@ -1,0 +1,4 @@
+# 国土数値情報の元データ（zip・展開したGeoJSON）はリポジトリに入れない。
+# fetch.py でいつでも取り直せる。
+data-raw/
+__pycache__/

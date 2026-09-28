@@ -124,6 +124,10 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
+  // 同じサイトに同居している別アプリ（愛知の鉄道3D路線図）には手を出さない。
+  // ここでキャッシュ優先にすると、路線データを更新しても古いまま表示され続ける。
+  if (url.pathname.includes('/aichi-rail/')) return;
+
   // ページを開くとき: ネットワーク優先。表示内容が常に最新になる。
   if (request.mode === 'navigate') {
     event.respondWith(networkFirst(request));
