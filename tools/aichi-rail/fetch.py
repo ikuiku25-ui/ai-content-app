@@ -4,11 +4,15 @@
 - 鉄道データ（N02）：最新年度から順に探し、最初に見つかった年度を使う
 - 行政区域（N03）：愛知県（都道府県コード 23）分のみ。こちらも最新年から探す
 
-取得したファイル名は data-raw/sources.json に記録し、inspect.py と build.py はそれを読む。
+取得したファイル名は data-raw/sources.json に記録し、inspect_raw.py と build.py はそれを読む。
 年度を固定したいときは引数で指定する：
 
     python fetch.py                  # 最新を自動で探す
     python fetch.py --n02 24 --n03 2025
+
+サイトに接続できない環境では、手元の zip を渡せる（その分はダウンロードしない）：
+
+    python fetch.py --n02-zip N02-25_GML.zip --n03-zip N03-20250101_23_GML.zip
 """
 import argparse
 import datetime
@@ -52,6 +56,11 @@ def extract_geojson(blob, dest):
     return names
 
 
+def from_zip(path, dest):
+    blob = Path(path).read_bytes()
+    return f"file:{Path(path).name}", extract_geojson(blob, dest)
+
+
 def fetch_n02(year2):
     candidates = [year2] if year2 else range(datetime.date.today().year % 100, 18, -1)
     for yy in candidates:
@@ -78,11 +87,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--n02", type=int, help="N02 の年度（西暦下2桁。例：24）")
     ap.add_argument("--n03", type=int, help="N03 の年（西暦4桁。例：2025）")
+    ap.add_argument("--n02-zip", help="ダウンロード済みの N02 zip")
+    ap.add_argument("--n03-zip", help="ダウンロード済みの N03（愛知県）zip")
     args = ap.parse_args()
 
     RAW_DIR.mkdir(exist_ok=True)
-    n02_url, n02_files = fetch_n02(args.n02)
-    n03_url, n03_files = fetch_n03(args.n03)
+    n02_url, n02_files = from_zip(args.n02_zip, RAW_DIR) if args.n02_zip else fetch_n02(args.n02)
+    n03_url, n03_files = from_zip(args.n03_zip, RAW_DIR) if args.n03_zip else fetch_n03(args.n03)
 
     sources = {
         "n02": {"url": n02_url, "files": n02_files},

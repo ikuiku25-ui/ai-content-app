@@ -92,6 +92,8 @@ def main():
     proj = make_projector(cfg["origin"]["lon"], cfg["origin"]["lat"])
     to_m = lambda g: transform(proj, g)
     company_of = {v: k for k, v in n02["operators"].items()}
+    # 名城線が「2号線名城線」「4号線名城線」に分かれているなど、表示上は1本にしたい路線をまとめる
+    rename = lambda raw: n02["line_rename"].get(raw, raw)
 
     # --- 愛知県ポリゴンと名古屋市ポリゴン
     admin = load_json(RAW_DIR / n03["file"])["features"]
@@ -116,7 +118,8 @@ def main():
         company = company_of.get(p.get(n02["operator_field"]))
         if not company:
             continue
-        by_line[(company, p[n02["operator_field"]], p[n02["line_field"]])].append(to_m(shape(f["geometry"])))
+        key = (company, p[n02["operator_field"]], rename(p[n02["line_field"]]))
+        by_line[key].append(to_m(shape(f["geometry"])))
 
     lines_out = []
     for (company, operator, line), geoms in sorted(by_line.items()):
@@ -151,7 +154,7 @@ def main():
         if not station_area.contains(pt):
             dropped_outside += 1
             continue
-        line = p[n02["line_field"]]
+        line = rename(p[n02["line_field"]])
         if (company, line) not in line_ids:
             continue
         stations_out.append({
@@ -164,15 +167,25 @@ def main():
             "x": round(pt.x),
             "y": round(pt.y),
         })
-    # 同じ路線・同じ駅名が複数（ホームが分かれている等）の場合は1つにまとめる
-    uniq = {}
+    # 同じ路線・同じ駅名が複数（ホームの線が分かれている等）の場合は、位置を平均して1つにまとめる。
+    # 1km 以上離れていたら別の駅とみなし、id に番号を付けて残す。
+    merged = defaultdict(list)
     for s in stations_out:
-        if s["id"] in uniq:
-            a = uniq[s["id"]]
-            a["x"], a["y"] = round((a["x"] + s["x"]) / 2), round((a["y"] + s["y"]) / 2)
+        for cluster in merged[s["id"]]:
+            if math.dist((cluster[0]["x"], cluster[0]["y"]), (s["x"], s["y"])) < 1000:
+                cluster.append(s)
+                break
         else:
-            uniq[s["id"]] = s
-    stations_out = list(uniq.values())
+            merged[s["id"]].append([s])
+    stations_out = []
+    for sid, clusters in merged.items():
+        for i, cluster in enumerate(clusters):
+            s = dict(cluster[0])
+            s["x"] = round(sum(c["x"] for c in cluster) / len(cluster))
+            s["y"] = round(sum(c["y"] for c in cluster) / len(cluster))
+            if i:
+                s["id"] = f"{sid}#{i + 1}"
+            stations_out.append(s)
 
     # --- 境界
     min_area = cfg["min_island_km2"] * 1e6
